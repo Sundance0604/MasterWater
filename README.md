@@ -23,7 +23,7 @@ Local-first 知乎文章仓库。本地 Markdown 是唯一真源。
 
 1. 列出修改的 Markdown；
 2. 逐篇更新带知乎文章 ID 的文件；
-3. 知乎全部成功后执行 `git add --all`、`git commit`；
+3. 知乎全部成功后暂存变更的 Markdown 及其引用的本地图片，再执行 `git commit`；
 4. 推送到 `origin/main`。
 
 任何知乎更新失败都会立即停止，不创建 Git commit，也不推送。已经成功更新的文章不会回滚；本地文件仍保持未提交状态，再次运行 `sync` 会重新处理这些文件。

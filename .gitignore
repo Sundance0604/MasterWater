@@ -1,0 +1,6 @@
+# Browser sessions may contain cookies and account credentials.
+.playwright-zhihu-profile/
+
+# Generated publishing payloads.
+publish_payload.json
+publish_payload_raw.txt

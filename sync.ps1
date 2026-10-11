@@ -30,15 +30,15 @@ function Invoke-Git {
 function Get-ChangedMarkdown {
     $paths = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
     $commands = @(
-        @("-c", "core.quotepath=false", "diff", "--name-only", "--diff-filter=ACMRD", "HEAD", "--", "*.md"),
-        @("-c", "core.quotepath=false", "diff", "--cached", "--name-only", "--diff-filter=ACMRD", "HEAD", "--", "*.md"),
+        @("-c", "core.quotepath=false", "-c", "core.autocrlf=false", "diff", "--name-only", "--diff-filter=ACMRD", "HEAD", "--", "*.md"),
+        @("-c", "core.quotepath=false", "-c", "core.autocrlf=false", "diff", "--cached", "--name-only", "--diff-filter=ACMRD", "HEAD", "--", "*.md"),
         @("-c", "core.quotepath=false", "ls-files", "--others", "--exclude-standard", "--", "*.md")
     )
 
     foreach ($command in $commands) {
         foreach ($line in (Invoke-Git -Arguments $command)) {
             $path = ([string]$line).Trim()
-            if ($path) {
+            if ($path -and -not $path.StartsWith("warning:", [StringComparison]::OrdinalIgnoreCase)) {
                 [void]$paths.Add(($path -replace "\\", "/"))
             }
         }
@@ -74,6 +74,41 @@ function Get-ZhihuArticleId {
         throw "$RelativePath contains conflicting Zhihu article IDs: $($ids -join ', ')"
     }
     return $ids[0]
+}
+
+function Get-LocalMarkdownAssets {
+    param([Parameter(Mandatory = $true)][string[]]$MarkdownPaths)
+
+    $assets = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+    $rootPrefix = [IO.Path]::GetFullPath($RepoRoot).TrimEnd("\\") + "\\"
+
+    foreach ($relativePath in $MarkdownPaths) {
+        $markdownPath = Join-Path $RepoRoot ($relativePath -replace "/", "\\")
+        if (-not (Test-Path -LiteralPath $markdownPath -PathType Leaf)) {
+            continue
+        }
+
+        $text = Get-Content -LiteralPath $markdownPath -Raw -Encoding UTF8
+        foreach ($match in [regex]::Matches($text, '!\[[^\]]*\]\((?<target>[^\)]+)\)')) {
+            $target = $match.Groups['target'].Value.Trim()
+            if ($target.StartsWith("<") -and $target.EndsWith(">")) {
+                $target = $target.Substring(1, $target.Length - 2)
+            }
+            $target = ($target -split '\s+["'']', 2)[0]
+            if (-not $target -or $target.StartsWith("#") -or $target -match '^[A-Za-z][A-Za-z0-9+.-]*:') {
+                continue
+            }
+
+            $decodedTarget = [Uri]::UnescapeDataString($target)
+            $candidate = [IO.Path]::GetFullPath((Join-Path (Split-Path -Parent $markdownPath) ($decodedTarget -replace "/", "\\")))
+            if ($candidate.StartsWith($rootPrefix, [StringComparison]::OrdinalIgnoreCase) -and
+                (Test-Path -LiteralPath $candidate -PathType Leaf)) {
+                [void]$assets.Add($candidate.Substring($rootPrefix.Length).Replace("\\", "/"))
+            }
+        }
+    }
+
+    return @($assets | Sort-Object)
 }
 
 try {
@@ -142,7 +177,10 @@ try {
     $hasPendingCommits = $LASTEXITCODE -eq 0 -and $pendingBefore.Count -gt 0 -and ($pendingBefore -join '').Trim()
 
     if ($changed.Count -gt 0) {
-        [void](Invoke-Git -Arguments @("add", "--all"))
+        $stagePaths = @($changed) + @(Get-LocalMarkdownAssets -MarkdownPaths $changed)
+        foreach ($path in ($stagePaths | Select-Object -Unique)) {
+            [void](Invoke-Git -Arguments @("add", "--", $path))
+        }
         $commitMessage = if ($Message) { $Message } else { "Sync articles $(Get-Date -Format 'yyyy-MM-dd HH:mm')" }
         [void](Invoke-Git -Arguments @("commit", "-m", $commitMessage))
         $hasPendingCommits = $true
