@@ -260,3 +260,97 @@ Period作为一种更大的结构能包含Sentence Form。
 3.  适用场景（Appears at HC and authentic cadences）这种进行广泛运用于半终止（Half Cadence, HC）以及正格终止/完满终止（Authentic Cadence）的前夕，用来极大地增强终止式到来前的张力与铺垫感。
 
 4. 进阶变体：解决到属七和弦（Resolving into V7 instead?）Move all three upper voices down by step：如果外音解决时不是走向普通属三和弦（$\text{V}$），而是直接走向属七和弦（$\text{V}^7$），那么上方的三个声部都需要向下级进移动。Requires THREE levels of figured bass：此时数字低音标记会扩展为三层数字连线（比如结合包含根音倍增或八度的 $8-7$ 运动：$\begin{smallmatrix} 8 & - & 7 \\ 6 & - & 5 \\ 4 & - & 3 \end{smallmatrix}$），字幕里提及的“用 8 后面加上 7”正是为了记录主音八度向下滑动变成属七和弦七音（$\hat{4}$）的级进轨迹。
+
+## Lesson 25 Leading Tone Seventh-Chords
+
+![图片](https://pic3.zhimg.com/v2-8ded638fc174ed031e26ac477d97caae_r.jpg)
+
+$V^7=G-B-D-F， vii^{\circ7}=B-D-F-A\flat, V^{6/5}=B-D-F-G$ 。
+
+![图片](https://pic4.zhimg.com/v2-32316e250005a17cc0a4aedab2eb6de1_r.jpg)
+
+${vii^{\circ}}^4_2$ rare been used.
+
+## Lesson 26 Applied Chordss to V
+
+![图片](https://picx.zhimg.com/v2-eb28bf02dcef7ad66416905ec63898a3_r.jpg)
+
+### Applied Dominant ($V/V$)
+
+**Two interpretations** (G major):
+
+- **Borrowed chord:** $V^{6/5}/V$ is borrowed from D major (the dominant key).
+
+- **Altered diatonic chord:** Raising $C$ to $C^\sharp$ transforms $ii^{6/5}$ into $V^{6/5}/V$.
+
+$ \begin{aligned} ii^{6/5}&=C-E-G-A\\ V^{6/5}/V&=C^\sharp-E-G-A \end{aligned} $
+
+**Resolution:**
+
+- $V^{6/5}/V\to V$ follows the same voice-leading rules as $V^{6/5}\to I$ in D major.
+
+- Leading tone: $C^\sharp\to D$.
+
+- Chordal seventh: $G\to F^\sharp$.
+
+**Function:**
+
+- **Locally:** Dominant function ($V/V\to V$).
+
+- **Globally:** Predominant role (PD $\to$ D), since it leads strongly to the dominant.
+
+Thus, an applied dominant can function as a predominant in the home key.
+
+![图片](https://pic1.zhimg.com/v2-aa6368556137cfdf3c3cadf19878ba16_r.jpg)
+
+### Applied Dominant & Applied Leading-Tone Chords
+
+In C major/minor, all resolve to $V=G-B-D$.
+
+| Chord | Notes | Common inversions |
+| --- | --- | --- |
+| V/V | D–F♯–A | All |
+| V^7/V | D–F♯–A–C | All |
+| vii^\circ/V | F♯–A–C | Usually 6 |
+| vii^{\circ7}/V | F♯–A–C–E♭ | All except 4/2 |
+| vii^{\ø7}/V | F♯–A–C–E | Usually root position |
+
+**Key points:**
+
+- **Applied dominant:** $V/V$, $V^7/V$ — built on the dominant of V.
+
+- **Applied leading-tone chord:** $vii^\circ/V$, $vii^{\circ7}/V$, $vii^{\ø7}/V$ — built on the leading tone of V.
+
+- $vii^{\ø7}/V$ occurs mainly in major; $vii^{\circ7}/V$ is common in both major and minor.
+
+- $V^7/V$ and $vii^{\circ7}/V$ share three notes: F♯–A–C.
+
+**Resolution:**
+
+$ V^7/V\to V,\qquad vii^{\circ7}/V\to V $
+
+Leading tone: $F^\sharp\to G$; chordal seventh of $V^7/V$: $C\to B$.
+
+### Five Tips: Applied Chords to V
+
+1. **Cadential 6⁄4:** Applied chords can resolve to a cadential $I^{6/4}$ before V.
+
+$    V/V\to I^{6/4}\to V\to I    $
+
+1. **Predominant function:** $V/V$ can be the only PD in a progression.
+
+$    I\to V/V\to V\to I    $
+
+1. **Voice leading:** Raised $\hat4$ ($\sharp\hat4$) is the leading tone of V, resolving to $\hat5$, but **need not be in the bass**.
+
+2. **Minor keys:** Applied chords to V typically require two accidentals. In C minor:
+
+$    V/V=D-F^\sharp-A^\natural    $
+
+1. **Major keys:** $vii^{\circ7}/V$ requires two accidentals. In C major:
+
+$    vii^{\circ7}/V=F^\sharp-A-C-E^\flat    $
+
+Compare: $vii^{\ø7}/V=F^\sharp-A-C-E$ (only one accidental).
+
+**Key idea:** Applied chords strengthen the motion toward V through a temporary leading tone ($\sharp\hat4\to\hat5$).

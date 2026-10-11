@@ -192,6 +192,12 @@ def main():
     parser.add_argument("--count", type=int, default=5)
     parser.add_argument("--delay", type=float, default=4.0)
     parser.add_argument(
+        "--article-id",
+        action="append",
+        default=[],
+        help="export only the specified Zhihu article ID; may be repeated",
+    )
+    parser.add_argument(
         "--overwrite",
         action="store_true",
         help="overwrite existing local Markdown; disabled by default to protect the local source of truth",
@@ -201,7 +207,16 @@ def main():
     output = Path(args.output)
     output.mkdir(parents=True, exist_ok=True)
     items, paging = article_list()
-    selected = items[args.start: args.start + args.count]
+    if args.article_id:
+        wanted = set(args.article_id)
+        selected = [item for item in items if item["Url"].rstrip("/").split("/")[-1] in wanted]
+        found = {item["Url"].rstrip("/").split("/")[-1] for item in selected}
+        missing = sorted(wanted - found)
+        if missing:
+            print(f"Article IDs not found: {', '.join(missing)}", file=sys.stderr)
+            return 2
+    else:
+        selected = items[args.start: args.start + args.count]
     manifest_path = output / "manifest.json"
     manifest = {"api_total": paging.get("Totals"), "is_end": paging.get("IsEnd"), "items": []}
     if manifest_path.exists():
@@ -213,7 +228,7 @@ def main():
         expected_filename = f"{date} - {safe_name(item['Title'])} - {item['Url'].rstrip('/').split('/')[-1]}.md"
         expected_path = output / expected_filename
         if expected_path.exists() and not args.overwrite:
-            print(f"SKIPPED {args.start + index + 1}/{len(items)} {expected_filename} (local file exists)")
+            print(f"SKIPPED {index + 1}/{len(selected)} {expected_filename} (local file exists)")
             continue
 
         try:
@@ -247,7 +262,7 @@ def main():
         manifest["is_end"] = paging.get("IsEnd")
         manifest["items"] = sorted(existing.values(), key=lambda value: (value["date"], value["title"]), reverse=True)
         manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8", newline="\n")
-        print(f"EXPORTED {args.start + index + 1}/{len(items)} {filename}")
+        print(f"EXPORTED {index + 1}/{len(selected)} {filename}")
         if index + 1 < len(selected):
             time.sleep(args.delay)
     return 0
